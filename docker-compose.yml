@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7.2.3
+    volumes:
+      - ./app:/app
+
+  redis-stack:
+    image: redis/redis-stack:latest
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+
+  redis-graph:
+    image: redislabs/redisgraph:latest
+    ports:
+      - "6378:6379"
+
+  app:
+    build:
+      context: .
+    volumes:
+      - ./app:/app
+    command: sleep infinity
+    environment:
+      - REDIS_OM_URL=redis://@redis-stack:6379/0
